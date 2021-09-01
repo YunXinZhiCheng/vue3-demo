@@ -1,36 +1,59 @@
 <template>
   <div class="container">
-    <div>{{ name }}</div>
-    <div>{{ age }}</div>
-    <button @click="updateName">修改数据</button>
+    <div>坐标</div>
+    <div>x: {{ x }}</div>
+    <div>y: {{ y }}</div>
+    <hr />
+    <div>{{ count }}</div>
+    <button @click="add">数字累加1</button>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { onMounted, onUnmounted, reactive, toRefs, ref } from 'vue'
+// 封装一个鼠标坐标函数
+const useMouse = () => {
+  // 1. 记录鼠标坐标
+  // 1.1 声明一个响应式数据，是一个对象，包括x,y
+  const mouse = reactive({
+    x: 0,
+    y: 0,
+  })
+  // 1.3 处理函数,修改响应式数据
+  const move = (e) => {
+    // console.log(e.pageX);
+    // console.log(e.pageY);
+    mouse.x = e.pageX
+    mouse.y = e.pageY
+  }
+  // 1.2 等DOM渲染完毕，去监听事件
+  onMounted(() => {
+    document.addEventListener('mousemove', move)
+  })
+  // 1.4 组件销毁，删除事件
+  onUnmounted(() => {
+    document.removeEventListener('mousemove', move)
+  })
+
+  return mouse
+}
+
 export default {
   name: 'App',
-  // 直接使用ref函数定义简单的数据类型   
   setup() {
-    // name数据
-    const name = ref('张三')
-    // age数据
-    const age = ref(18)
+    // 使用封装的鼠标坐标函数
+    const mouse = useMouse()
 
-    // 修改简单类型数据 name, 使用 .value 
-    const updateName = ()=>{
-        name.value = '李四'
+    // 数字累加
+    const count = ref(0)
+    const add = () => {
+      count.value++
     }
-    // 修改复杂类型数据
-    // const data = ref(null)
-    // setTimeout(()=>{
-    //     data.value = res.data
-    // },1000)
-
     return {
-      name,
-      age,
-      updateName
+      // mouse
+      ...toRefs(mouse),
+      count,
+      add,
     }
   },
 }
