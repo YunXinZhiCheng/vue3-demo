@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    {{ name }}
-    <br />
+    <div>名字：{{ name }}</div>
+    <div>年龄：{{ age }}</div>
     <button @click="updateName">修改数据</button>
   </div>
 </template>
 
 <script>
-import { reactive, toRef } from 'vue'
+import { reactive,  toRefs } from 'vue'
 export default {
   name: 'App',
   setup() {
@@ -16,21 +16,27 @@ export default {
       name: '张三',
       age: 10,
     })
-    // 2. 模板中只需要使用name数据
-    // 注意：从响应式对象中解构出来的属性数据，不再是响应式数据, 出来的是一个普通数据
-    // const { name } = obj
+    console.log(obj)
 
-    const name = toRef(obj, 'name')
-    console.log(name)
+    // 2. 解构或者展开响应式数据对象
+    // const { name, age } = obj
+    // console.log(name,age);
 
-    // 3. 修改name数据: 属性.value
+    // const obj2 = { ...obj }
+    // console.log(obj2);
+    // 以上方式导致数据不是响应式数据
+
+    // 使用toRefs函数,是响应式数据
+    const obj3 = toRefs(obj)
+    console.log(obj3)
+
+    // 定义一个函数，修改数据 name
     const updateName = () => {
-      console.log('updateName')
-      // toRef转换响应式数据包装成对象，value存放值的位置
-      name.value = '李四'
+      obj3.name.value = '李四'
+      // obj3.age.value = 18
     }
     return {
-      name,
+      ...obj3,
       updateName,
     }
   },
