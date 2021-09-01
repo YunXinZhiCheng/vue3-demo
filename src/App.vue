@@ -1,25 +1,38 @@
 <template>
-  <div class="container">生命周期</div>
+  <div class="container">
+    <div>{{ obj.name }}</div>
+    <div>{{ obj.age }}</div>
+    <button @click="updateName">修改数据</button>
+  </div>
 </template>
 
 <script>
-import { onBeforeMount, onMounted } from 'vue'
+// 导入reactive函数
+import { reactive } from 'vue'
 
 export default {
   name: 'App',
   setup() {
-    // 1. DOM渲染前钩子
-    onBeforeMount(() =>
-      console.log('DOM渲染前钩子', document.querySelector('.container'))
-    )
-    // 2. DOM渲染后钩子
-    onMounted(() =>
-      console.log('DOM渲染后钩子1', document.querySelector('.container'))
-    )
-    // 3.可以定义多个相同的构造函数，以实现不同的逻辑
-    onMounted(() =>
-      console.log('DOM渲染后钩子2', document.querySelector('.container'))
-    )
+    //  定义一个对象:普通数据
+    // const obj = {
+    //   name: '张三',
+    //   age: 18,
+    // }
+
+    // 定义一个对象：响应式数据
+    const obj = reactive({
+      name: '张三',
+      age: 18,
+    })
+    // 定义一个函数：修改名字
+    const updateName = () => {
+      console.log('updateName')
+      obj.name = '李四'
+    }
+    return {
+      obj,
+      updateName,
+    }
   },
 }
 </script>
