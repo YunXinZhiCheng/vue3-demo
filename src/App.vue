@@ -8,7 +8,7 @@
       <div>姓名：{{ obj.name }}</div>
       <div>年龄：{{ obj.age }}</div>
       <button @click="updateName">修改数据</button>
-      
+
       <hr />
       <div>品牌：{{ obj.brand.name }}</div>
       <button @click="updateBrandName">修改品牌数据</button>
@@ -58,6 +58,15 @@ export default {
     watch(obj, () => {
       console.log('数据改变了')
     })
+
+    // 监听一个深层次对象数据的变化：使用深度监听
+    watch(
+      () => obj.brand,
+      () => {
+        console.log('brand数据改变了')
+      },
+      { deep: true }
+    )
 
     // 3. 监听多个数据的变化
     // watch([count, obj], () => {
