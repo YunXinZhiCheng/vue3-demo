@@ -1,37 +1,32 @@
 <template>
-  <vue class="container">
-    <h1>父组件发送：{{ money }}</h1>
-    <button @click="money = 1000">发钱</button>
+  <div class="container">
+    <!--如果绑定事件函数 fn(e)中e就是事件对象 
+        如果绑定JS表达式，此时提供一个默认的变量 $event
+    -->
+    <!-- <h1 @click="fn">父组件 {{ count }}</h1> -->
+    <h1 @click="$event.target.style.color = 'red'">父组件 {{ count }}</h1>
+
     <hr />
-    <Son2 />
-  </vue>
+    <!-- 如果你想获取自定义事件,
+    如果绑定事件函数， fn fn(data){ // data触发自定义事件的传参}
+    如果绑定Js表达式， 此时$event代表触发自定义事件的传参 -->
+    <!-- <Son3 :modelValue="count" @update:modelValue="count = $event" /> -->
+    <Son3 v-model="count" />
+  </div>
 </template>
 
 <script>
-import Son2 from './Son2.vue'
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
+import Son3 from './Son3.vue'
 export default {
   name: 'App',
   components: {
-    Son2,
+    Son3,
   },
   setup() {
-    // 定义数据
-    const money = ref(100)
-    // 改变数据
-    const changeMoney = (saleMoney) => {
-      console.log('changeMoney', saleMoney)
-      // 剩余多少
-      money.value = money.value - saleMoney
-    }
-    // 将数据提供给后代组件 provide()
-    provide('money', money)
-    // 将函数提供给后代组件 provide()
-    provide('changeMoney', changeMoney)
-
+    const count = ref(10)
     return {
-      money,
-      changeMoney,
+      count,
     }
   },
 }
